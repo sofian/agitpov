@@ -2,9 +2,10 @@
  * AgitPOV
  * 7-LED POV for Arduino
  *
- * (c) 2011 Alexandre Castonguay
- *          Sofian Audry
- *          Jean-Pascal Bellemare
+ * (c) 2011-2012
+ *       Alexandre Castonguay
+ *       Sofian Audry
+ *       Jean-Pascal Bellemare
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +23,15 @@
 
 // Letter width. since i have 7 LED, then each letter would look like a 7 x 5 matrix
 #define WIDTH 5
+#define MAX_MESSAGE_LENGTH 10
 
 #define USE_LATIN
-//#define USE_ARABIC
+#define USE_ARABIC
 
-typedef uint16_t letter_t;
+#include <avr/pgmspace.h>
+
+#include "latin_chars.h"
+#include "arabic_chars.h"
 
 // nous aurons besoin de comparer le temps écoulé entre deux lectures du senseur reed
 
@@ -46,20 +51,28 @@ void setup()
 //method of displaying the letters. displaying each column (one hex number) of the letter one by one through PORTD. then after a letter, it puts a space in between and move onto the next letter. until however long of the String you wish to display.
 //each letter is first turned into ASCII integer, then minus 65. It would then be the row of the letter from the library above. (ex. A is 65 in ASCII, but row 0 in my library)
 // furthermore, because of the way i made the hardware, it displays each letter starting from the back of the sentence, and each letter from the right most column.
-
-void display(letter_t message[], size_t length)
+void display(prog_uchar fontSet[][WIDTH], int16_t* message, size_t length)
 {
+  length = min(length, MAX_MESSAGE_LENGTH);
   for (int i = length-1; i>=0; i--)
   {
     for (int j = (WIDTH-1); j>=0; j--)
     {
-      PORTD = font[(int)string[i]-0][j];
+      PORTD = pgm_read_byte(&fontSet[(int)message[i]-0][j]);
       delayMicroseconds(3000);
     }
     PORTD = B00000000;
     delayMicroseconds(5050);
   }
 }
+
+#ifdef USE_LATIN
+void displayLatin(const char* msg) {
+  int16_t alphaMsg[MAX_MESSAGE_LENGTH];
+  latin_str2alpha(alphaMsg, msg);
+  display(LATIN_CHARS, alphaMsg, strlen(msg));
+}
+#endif
 
 // you simply feed a string to display it. this code only allows capital letters. however, if you add characters or lowercases in the library above, it would also be able to display it. (but then it would minus a different number instead of 65 above)
 
@@ -82,7 +95,9 @@ void loop()
     //Serial.println(intervalle);
     //  Serial.println();
     delay(intervalle);
-    display( { 1, 2, 3, 4 }, 4 );
+
+    //displayLatin("HELLO");
+    display( ARABIC_CHARS, (int16_t[]){ kaf_ini, ra_end, ya_ini, mim_end }, 4);
     //display("BONJOUR");
   }
 }
