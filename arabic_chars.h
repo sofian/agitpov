@@ -28,6 +28,8 @@
 
 #define long_end 84 // must follow sin_end1, shin_end1, sad_end1 and dad_end1
 
+#define space 85
+
 #define alif_iso   0
 #define alif_ini   0
 #define alif_med   1
@@ -185,7 +187,8 @@
 #define hamzah_end  83
 
 uint8_t PROGMEM ARABIC_CHARS [][5] = {
-
+//uint8_t ARABIC_CHARS[][5] = {
+  
 /*0*/	{ 0x00, 0x00, 0x7c, 0x00, 0x00, }, // alif_iso & alif_ini
 	{ 0x00, 0x00, 0x7c, 0x04, 0x04, }, // alif_med & alif_end
 
@@ -302,6 +305,8 @@ uint8_t PROGMEM ARABIC_CHARS [][5] = {
 	{ 0x00, 0x00, 0x10, 0x30, 0x50, }, // hamzah_end
 
 	{ 0x0e, 0x01, 0x01, 0x01, 0x0e, }, // long end: must follow sin_end, shin_end, sad_end and dad_end
+
+/*85*/	{ 0x00, 0x00, 0x00, 0x00, 0x00, }, // space
 };
 
 

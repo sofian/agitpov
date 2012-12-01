@@ -26,6 +26,7 @@ void latin_str2alpha(int16_t *dst, const char* str) {
 }
 
 uint8_t PROGMEM LATIN_CHARS [][5] =
+//uint8_t LATIN_CHARS [][5] =
 {
 	{0x00, 0x00, 0x00, 0x00, 0x00}, //space
 	{0x00, 0x00, 0x5f, 0x00, 0x00}, //!
